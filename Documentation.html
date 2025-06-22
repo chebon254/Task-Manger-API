@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management API Documentation</title>
+    <link rel="icon shortcut" href="assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "DM Sans", sans-serif;
+        }
+
+        :root {
+            --primary-blue: #3B82F6;
+            --primary-green: #10B981;
+            --primary-orange: #F59E0B;
+            --primary-purple: #8B5CF6;
+            --dark-bg: #0F172A;
+            --dark-card: #1E293B;
+            --dark-border: #334155;
+            --text-primary: #F8FAFC;
+            --text-secondary: #CBD5E1;
+            --text-muted: #94A3B8;
+            --success: #059669;
+            --warning: #D97706;
+            --error: #DC2626;
+            --code-bg: #0F172A;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: var(--dark-card);
+            border-bottom: 1px solid var(--dark-border);
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            color: #ffffff !important;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .base-url {
+            background: var(--code-bg);
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            color: var(--primary-green);
+        }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            background: var(--dark-card);
+            border-bottom: 1px solid var(--dark-border);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            z-index: 100;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .section {
+            background: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            color: var(--primary-blue);
+            border-left: 4px solid var(--primary-blue);
+            padding-left: 1rem;
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-right: 0.5rem;
+        }
+
+        .method-get {
+            background: var(--success);
+            color: white;
+        }
+
+        .method-post {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .method-put {
+            background: var(--warning);
+            color: white;
+        }
+
+        .method-delete {
+            background: var(--error);
+            color: white;
+        }
+
+        .endpoint {
+            background: var(--code-bg);
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block pre {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .json-key {
+            color: var(--primary-blue);
+        }
+
+        .json-string {
+            color: var(--primary-green);
+        }
+
+        .json-number {
+            color: var(--primary-orange);
+        }
+
+        .json-boolean {
+            color: var(--primary-purple);
+        }
+
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--code-bg);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .params-table th,
+        .params-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .params-table th {
+            background: var(--dark-border);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .params-table td {
+            color: var(--text-secondary);
+        }
+
+        .param-name {
+            color: var(--primary-blue);
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-weight: 600;
+        }
+
+        .param-type {
+            color: var(--primary-orange);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .response-code {
+            display: inline-block;
+            background: var(--success);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .response-code.error {
+            background: var(--error);
+        }
+
+        .icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: currentColor;
+        }
+
+        .auth-note {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            color: white;
+        }
+
+        .auth-note strong {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-codes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .status-code {
+            background: var(--code-bg);
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .status-code-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-200 {
+            border-left: 4px solid var(--success);
+        }
+
+        .status-201 {
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .status-400 {
+            border-left: 4px solid var(--warning);
+        }
+
+        .status-401 {
+            border-left: 4px solid var(--error);
+        }
+
+        .status-404 {
+            border-left: 4px solid var(--error);
+        }
+
+        .status-500 {
+            border-left: 4px solid var(--error);
+        }
+
+        .data-model {
+            background: var(--code-bg);
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .data-model h4 {
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .field {
+            margin: 0.5rem 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+        }
+
+        .field-name {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .field-type {
+            color: var(--primary-orange);
+        }
+
+        .field-comment {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🚀 Task Management API</h1>
+            <p>RESTful API for task management with authentication, categories, and real-time updates</p>
+            <div class="base-url">
+                <strong>Base URL:</strong> https://humane-properly-bug.ngrok-free.app
+            </div>
+        </div>
+    </div>
+
+    <div class="nav">
+        <div class="container">
+            <div class="nav-links">
+                <a href="#overview">Overview</a>
+                <a href="#authentication">Authentication</a>
+                <a href="#auth-endpoints">Auth Endpoints</a>
+                <a href="#task-endpoints">Task Endpoints</a>
+                <a href="#category-endpoints">Category Endpoints</a>
+                <a href="#data-models">Data Models</a>
+                <a href="#error-codes">Error Codes</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <section id="overview" class="section">
+            <h2>📋 Overview</h2>
+            <p>This is a RESTful API for a task management system built with <strong>Node.js</strong>,
+                <strong>Express</strong>, and <strong>PostgreSQL</strong>. The API supports user authentication, task
+                management, and category organization with a clean, consistent interface.</p>
+
+            <h3>✨ Features</h3>
+            <ul style="margin-left: 2rem; color: var(--text-secondary);">
+                <li>🔐 JWT-based authentication with refresh tokens</li>
+                <li>📝 Complete CRUD operations for tasks and categories</li>
+                <li>🔍 Advanced filtering, sorting, and pagination</li>
+                <li>📊 Task statistics and analytics</li>
+                <li>🎨 Color-coded categories</li>
+                <li>⚡ Real-time data validation</li>
+            </ul>
+        </section>
+
+        <section id="authentication" class="section">
+            <h2>🔐 Authentication</h2>
+            <p>The API uses JWT (JSON Web Tokens) for authentication. Include the token in the Authorization header for
+                protected endpoints:</p>
+
+            <div class="auth-note">
+                <strong>Authorization Header:</strong>
+                <code>Authorization: Bearer &lt;your_jwt_token&gt;</code>
+            </div>
+
+            <h3>📦 Common Response Format</h3>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "success"</span>: <span class="json-boolean">boolean</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"string"</span>,
+  <span class="json-key">"data"</span>: <span class="json-key">{}</span> <span class="field-comment">// Response data (when applicable)</span>
+<span class="json-key">}</span></pre>
+            </div>
+
+            <h3>❌ Error Response Format</h3>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Error description"</span>,
+  <span class="json-key">"details"</span>: [<span class="json-string">"validation error details"</span>] <span class="field-comment">// For validation errors</span>
+<span class="json-key">}</span></pre>
+            </div>
+        </section>
+
+        <section id="auth-endpoints" class="section">
+            <h2>🔑 Authentication Endpoints</h2>
+
+            <h3><span class="method-badge method-post">POST</span> Register User</h3>
+            <div class="endpoint">/api/auth/register</div>
+            <p><strong>Description:</strong> Create a new user account</p>
+
+            <h4>Request Body:</h4>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "name"</span>: <span class="json-string">"John Doe"</span>,
+  <span class="json-key">"email"</span>: <span class="json-string">"john@example.com"</span>,
+  <span class="json-key">"password"</span>: <span class="json-string">"password123"</span>
+<span class="json-key">}</span></pre>
+            </div>
+
+            <h4>Validation Rules:</h4>
+            <table class="params-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Requirements</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="param-name">name</td>
+                        <td class="param-type">string</td>
+                        <td>Required, 2-50 characters</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">email</td>
+                        <td class="param-type">string</td>
+                        <td>Required, valid email format</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">password</td>
+                        <td class="param-type">string</td>
+                        <td>Required, minimum 6 characters</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4><span class="response-code">201</span> Success Response:</h4>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"User registered successfully"</span>,
+  <span class="json-key">"data"</span>: <span class="json-key">{
+    "user"</span>: <span class="json-key">{
+      "id"</span>: <span class="json-string">"cm123abc"</span>,
+      <span class="json-key">"name"</span>: <span class="json-string">"John Doe"</span>,
+      <span class="json-key">"email"</span>: <span class="json-string">"john@example.com"</span>,
+      <span class="json-key">"createdAt"</span>: <span class="json-string">"2025-06-21T10:00:00.000Z"</span>
+    <span class="json-key">}</span>,
+    <span class="json-key">"token"</span>: <span class="json-string">"eyJhbGciOiJIUzI1NiIs..."</span>,
+    <span class="json-key">"refreshToken"</span>: <span class="json-string">"eyJhbGciOiJIUzI1NiIs..."</span>
+  <span class="json-key">}
+}</span></pre>
+            </div>
+
+            <h3><span class="method-badge method-post">POST</span> Login User</h3>
+            <div class="endpoint">/api/auth/login</div>
+            <p><strong>Description:</strong> Authenticate user and receive access tokens</p>
+
+            <h4>Request Body:</h4>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "email"</span>: <span class="json-string">"john@example.com"</span>,
+  <span class="json-key">"password"</span>: <span class="json-string">"password123"</span>
+<span class="json-key">}</span></pre>
+            </div>
+
+            <h3><span class="method-badge method-post">POST</span> Refresh Token</h3>
+            <div class="endpoint">/api/auth/refresh</div>
+            <p><strong>Description:</strong> Get new access token using refresh token</p>
+
+            <h3><span class="method-badge method-get">GET</span> Get Current User</h3>
+            <div class="endpoint">/api/auth/me</div>
+            <p><strong>Description:</strong> Get current authenticated user information</p>
+            <div class="auth-note">
+                <strong>Headers:</strong> Authorization: Bearer &lt;token&gt;
+            </div>
+        </section>
+
+        <section id="task-endpoints" class="section">
+            <h2>📋 Task Endpoints</h2>
+
+            <h3><span class="method-badge method-get">GET</span> Get All Tasks</h3>
+            <div class="endpoint">/api/tasks</div>
+            <p><strong>Description:</strong> Get paginated list of user's tasks with filtering and sorting</p>
+
+            <h4>Query Parameters:</h4>
+            <table class="params-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="param-name">page</td>
+                        <td class="param-type">number</td>
+                        <td>1</td>
+                        <td>Page number for pagination</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">limit</td>
+                        <td class="param-type">number</td>
+                        <td>10</td>
+                        <td>Number of tasks per page</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">status</td>
+                        <td class="param-type">string</td>
+                        <td>-</td>
+                        <td>Filter by task status (PENDING, IN_PROGRESS, COMPLETED, CANCELLED)</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">categoryId</td>
+                        <td class="param-type">string</td>
+                        <td>-</td>
+                        <td>Filter by category ID</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">search</td>
+                        <td class="param-type">string</td>
+                        <td>-</td>
+                        <td>Search in title and description</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">sortBy</td>
+                        <td class="param-type">string</td>
+                        <td>createdAt</td>
+                        <td>Field to sort by</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">sortOrder</td>
+                        <td class="param-type">string</td>
+                        <td>desc</td>
+                        <td>Sort order (asc or desc)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Example Request:</h4>
+            <div class="endpoint">GET /api/tasks?page=1&limit=5&status=PENDING&search=project</div>
+
+            <h3><span class="method-badge method-get">GET</span> Get Single Task</h3>
+            <div class="endpoint">/api/tasks/:id</div>
+
+            <h3><span class="method-badge method-post">POST</span> Create Task</h3>
+            <div class="endpoint">/api/tasks</div>
+            <p><strong>Description:</strong> Create a new task</p>
+
+            <h4>Request Body:</h4>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "title"</span>: <span class="json-string">"New Task"</span>,
+  <span class="json-key">"description"</span>: <span class="json-string">"Task description (optional)"</span>,
+  <span class="json-key">"dueDate"</span>: <span class="json-string">"2025-06-30T15:00:00.000Z"</span>,
+  <span class="json-key">"status"</span>: <span class="json-string">"PENDING"</span>,
+  <span class="json-key">"categoryId"</span>: <span class="json-string">"work-category"</span>
+<span class="json-key">}</span></pre>
+            </div>
+
+            <h3><span class="method-badge method-put">PUT</span> Update Task</h3>
+            <div class="endpoint">/api/tasks/:id</div>
+
+            <h3><span class="method-badge method-delete">DELETE</span> Delete Task</h3>
+            <div class="endpoint">/api/tasks/:id</div>
+
+            <h3><span class="method-badge method-get">GET</span> Get Task Statistics</h3>
+            <div class="endpoint">/api/tasks/stats</div>
+            <p><strong>Description:</strong> Get task statistics for the authenticated user</p>
+
+            <h4><span class="response-code">200</span> Success Response:</h4>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"data"</span>: <span class="json-key">{
+    "totalTasks"</span>: <span class="json-number">25</span>,
+    <span class="json-key">"pendingTasks"</span>: <span class="json-number">8</span>,
+    <span class="json-key">"inProgressTasks"</span>: <span class="json-number">3</span>,
+    <span class="json-key">"completedTasks"</span>: <span class="json-number">12</span>,
+    <span class="json-key">"overdueTasks"</span>: <span class="json-number">2</span>
+  <span class="json-key">}
+}</span></pre>
+            </div>
+        </section>
+
+        <section id="category-endpoints" class="section">
+            <h2>🎨 Category Endpoints</h2>
+
+            <h3><span class="method-badge method-get">GET</span> Get All Categories</h3>
+            <div class="endpoint">/api/categories</div>
+            <p><strong>Description:</strong> Get all categories for the authenticated user with task counts</p>
+
+            <h3><span class="method-badge method-get">GET</span> Get Single Category</h3>
+            <div class="endpoint">/api/categories/:id</div>
+
+            <h3><span class="method-badge method-post">POST</span> Create Category</h3>
+            <div class="endpoint">/api/categories</div>
+            <p><strong>Description:</strong> Create a new category</p>
+
+            <h4>Request Body:</h4>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "name"</span>: <span class="json-string">"Health"</span>,
+  <span class="json-key">"color"</span>: <span class="json-string">"#F59E0B"</span>
+<span class="json-key">}</span></pre>
+            </div>
+
+            <h4>Validation Rules:</h4>
+            <table class="params-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Requirements</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="param-name">name</td>
+                        <td class="param-type">string</td>
+                        <td>Required, 1-50 characters, must be unique per user</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">color</td>
+                        <td class="param-type">string</td>
+                        <td>Optional, hex color format (default: "#3B82F6")</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3><span class="method-badge method-put">PUT</span> Update Category</h3>
+            <div class="endpoint">/api/categories/:id</div>
+
+            <h3><span class="method-badge method-delete">DELETE</span> Delete Category</h3>
+            <div class="endpoint">/api/categories/:id</div>
+            <p><strong>Note:</strong> Only categories with no associated tasks can be deleted.</p>
+        </section>
+
+        <section id="data-models" class="section">
+            <h2>📊 Data Models</h2>
+
+            <div class="data-model">
+                <h4>👤 User</h4>
+                <div class="field">
+                    <span class="field-name">id</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// Unique identifier</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">email</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// User email (unique)</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">name</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// User display name</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">createdAt</span>: <span class="field-type">Date</span> <span
+                        class="field-comment">// Account creation timestamp</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">updatedAt</span>: <span class="field-type">Date</span> <span
+                        class="field-comment">// Last update timestamp</span>
+                </div>
+            </div>
+
+            <div class="data-model">
+                <h4>📝 Task</h4>
+                <div class="field">
+                    <span class="field-name">id</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// Unique identifier</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">title</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// Task title</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">description?</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// Optional task description</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">dueDate?</span>: <span class="field-type">Date</span> <span
+                        class="field-comment">// Optional due date</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">status</span>: <span class="field-type">TaskStatus</span> <span
+                        class="field-comment">// PENDING | IN_PROGRESS | COMPLETED | CANCELLED</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">userId</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// Owner user ID</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">categoryId?</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// Optional category ID</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">createdAt</span>: <span class="field-type">Date</span> <span
+                        class="field-comment">// Creation timestamp</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">updatedAt</span>: <span class="field-type">Date</span> <span
+                        class="field-comment">// Last update timestamp</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">category?</span>: <span class="field-type">Category</span> <span
+                        class="field-comment">// Associated category (when included)</span>
+                </div>
+            </div>
+
+            <div class="data-model">
+                <h4>🎨 Category</h4>
+                <div class="field">
+                    <span class="field-name">id</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// Unique identifier</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">name</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// Category name</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">color</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// Hex color code</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">userId</span>: <span class="field-type">string</span> <span
+                        class="field-comment">// Owner user ID</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">createdAt</span>: <span class="field-type">Date</span> <span
+                        class="field-comment">// Creation timestamp</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">updatedAt</span>: <span class="field-type">Date</span> <span
+                        class="field-comment">// Last update timestamp</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">_count?</span>: <span class="field-type">{ tasks: number }</span> <span
+                        class="field-comment">// Task count (when included)</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">tasks?</span>: <span class="field-type">Task[]</span> <span
+                        class="field-comment">// Associated tasks (when included)</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="error-codes" class="section">
+            <h2>⚠️ Error Codes</h2>
+            <div class="status-codes">
+                <div class="status-code status-200">
+                    <div class="status-code-number" style="color: var(--success);">200</div>
+                    <div>OK - Request successful</div>
+                </div>
+                <div class="status-code status-201">
+                    <div class="status-code-number" style="color: var(--primary-blue);">201</div>
+                    <div>Created - Resource created successfully</div>
+                </div>
+                <div class="status-code status-400">
+                    <div class="status-code-number" style="color: var(--warning);">400</div>
+                    <div>Bad Request - Invalid input data</div>
+                </div>
+                <div class="status-code status-401">
+                    <div class="status-code-number" style="color: var(--error);">401</div>
+                    <div>Unauthorized - Invalid or missing token</div>
+                </div>
+                <div class="status-code status-404">
+                    <div class="status-code-number" style="color: var(--error);">404</div>
+                    <div>Not Found - Resource doesn't exist</div>
+                </div>
+                <div class="status-code status-500">
+                    <div class="status-code-number" style="color: var(--error);">500</div>
+                    <div>Internal Server Error</div>
+                </div>
+            </div>
+
+            <h3>🔍 Example Error Responses</h3>
+
+            <h4><span class="response-code error">400</span> Validation Error:</h4>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Validation failed"</span>,
+  <span class="json-key">"details"</span>: [
+    <span class="json-string">"Name is required"</span>,
+    <span class="json-string">"Email must be valid"</span>
+  ]
+<span class="json-key">}</span></pre>
+            </div>
+
+            <h4><span class="response-code error">401</span> Authentication Error:</h4>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Invalid or expired token"</span>
+<span class="json-key">}</span></pre>
+            </div>
+
+            <h4><span class="response-code error">404</span> Not Found Error:</h4>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Task not found"</span>
+<span class="json-key">}</span></pre>
+            </div>
+
+            <h4><span class="response-code error">400</span> Category Deletion Error:</h4>
+            <div class="code-block">
+                <pre><span class="json-key">{
+  "success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Cannot delete category. It has 5 associated tasks. Please move or delete the tasks first."</span>
+<span class="json-key">}</span></pre>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🚀 Quick Start</h2>
+            <p>Get started with the Task Management API in just a few steps:</p>
+
+            <h3>1️⃣ Register a New User</h3>
+            <div class="code-block">
+                <pre>curl -X POST https://humane-properly-bug.ngrok-free.app/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Your Name",
+    "email": "your.email@example.com",
+    "password": "securepassword123"
+  }'</pre>
+            </div>
+
+            <h3>2️⃣ Create Your First Task</h3>
+            <div class="code-block">
+                <pre>curl -X POST https://humane-properly-bug.ngrok-free.app/api/tasks \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "title": "My First Task",
+    "description": "Getting started with the API",
+    "status": "PENDING"
+  }'</pre>
+            </div>
+
+            <h3>3️⃣ Create a Category</h3>
+            <div class="code-block">
+                <pre>curl -X POST https://humane-properly-bug.ngrok-free.app/api/categories \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "name": "Work",
+    "color": "#3B82F6"
+  }'</pre>
+            </div>
+
+            <h3>4️⃣ Get Your Tasks</h3>
+            <div class="code-block">
+                <pre>curl -X GET https://humane-properly-bug.ngrok-free.app/api/tasks \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"</pre>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>💡 Tips & Best Practices</h2>
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                <div
+                    style="background: var(--code-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary-blue);">
+                    <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;">🔒 Security</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Always include the Authorization header
+                        for protected endpoints. Store tokens securely and refresh them when needed.</p>
+                </div>
+                <div
+                    style="background: var(--code-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary-green);">
+                    <h4 style="color: var(--primary-green); margin-bottom: 0.5rem;">📊 Pagination</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Use pagination for large datasets. Start
+                        with reasonable limits (10-50 items) and implement client-side caching.</p>
+                </div>
+                <div
+                    style="background: var(--code-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary-orange);">
+                    <h4 style="color: var(--primary-orange); margin-bottom: 0.5rem;">🎨 Categories</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Use color-coded categories to organize
+                        tasks visually. Stick to a consistent color palette for better UX.</p>
+                </div>
+                <div
+                    style="background: var(--code-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary-purple);">
+                    <h4 style="color: var(--primary-purple); margin-bottom: 0.5rem;">⚡ Performance</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Use filtering and sorting parameters to
+                        reduce payload size. Cache frequently accessed data on the client side.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add syntax highlighting to code blocks
+        document.querySelectorAll('.code-block pre').forEach(block => {
+            block.innerHTML = block.innerHTML
+                .replace(/("[\w\s]*?")\s*:/g, '<span class="json-key">$1</span>:')
+                .replace(/:\s*(".*?")/g, ': <span class="json-string">$1</span>')
+                .replace(/:\s*(\d+)/g, ': <span class="json-number">$1</span>')
+                .replace(/:\s*(true|false)/g, ': <span class="json-boolean">$1</span>');
+        });
+
+        // Add copy button functionality to code blocks
+        document.querySelectorAll('.code-block').forEach(block => {
+            const copyBtn = document.createElement('button');
+            copyBtn.innerHTML = '📋';
+            copyBtn.style.cssText = `
+                position: absolute;
+                top: 0.5rem;
+                right: 0.5rem;
+                background: var(--primary-blue);
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 0.5rem;
+                cursor: pointer;
+                font-size: 0.8rem;
+                opacity: 0;
+                transition: opacity 0.2s;
+            `;
+
+            block.style.position = 'relative';
+            block.appendChild(copyBtn);
+
+            block.addEventListener('mouseenter', () => copyBtn.style.opacity = '1');
+            block.addEventListener('mouseleave', () => copyBtn.style.opacity = '0');
+
+            copyBtn.addEventListener('click', () => {
+                const text = block.querySelector('pre').textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    copyBtn.innerHTML = '✅';
+                    setTimeout(() => copyBtn.innerHTML = '📋', 1000);
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
